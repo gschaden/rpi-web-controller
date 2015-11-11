@@ -50,6 +50,7 @@ class ServerRequestHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
     def cmd_direction(self, direction):
         logging.debug("cmd %s" % direction)
         if CMD_PORT_MAP.has_key(direction):
+            # run blink in background
             Thread(target=blink, args=(CMD_PORT_MAP[direction],)).start()
 
     # called for function cmds (toggle)
@@ -80,10 +81,10 @@ class ServerRequestHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
             # respond with current status
             json.dump(status(), self.wfile)
         else:
-            pos = self.path.find("?")
+            pos = self.path.find("?") # clean path, remove parameters
             if pos != -1:
                 self.path=self.path[:pos-1]
-            if self.path == "/":
+            if self.path == "/": # fallback to index.html
                 self.path += "index.html"
             path = "www" + self.path
             if os.path.exists(path):
