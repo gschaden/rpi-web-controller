@@ -26,7 +26,8 @@ else:
 # init GPIO
 GPIO.setmode(GPIO.BCM)
 # init output ports
-apply(lambda port: GPIO.setup(port,  GPIO.OUT), CMD_PORT_MAP.values())
+for (cmd, port) in CMD_PORT_MAP.iteritems():
+    GPIO.setup(port,  GPIO.OUT)
 
 
 #return curren pin status

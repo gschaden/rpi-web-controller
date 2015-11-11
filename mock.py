@@ -1,3 +1,7 @@
+"""
+Mock for developing for rpi GPIO Library
+"""
+
 import logging
 
 BCM=1
@@ -14,7 +18,7 @@ def setmode(mode):
     logging.debug("setmode %s" % mode)
 
 def setup(port, direction):
-    logging.debug("setup %s %s" % (port, dir))
+    logging.debug("setup %s %s" % (port, direction))
 
 def output(port, value):
     logging.debug("output %s %s" % (port, value))
