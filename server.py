@@ -80,6 +80,9 @@ class ServerRequestHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
             # respond with current status
             json.dump(status(), self.wfile)
         else:
+            pos = self.path.find("?")
+            if pos != -1:
+                self.path=self.path[:pos-1]
             if self.path == "/":
                 self.path += "index.html"
             path = "www" + self.path
