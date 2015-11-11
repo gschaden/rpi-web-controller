@@ -27,6 +27,7 @@ else:
 GPIO.setmode(GPIO.BCM)
 # init output ports
 for (cmd, port) in CMD_PORT_MAP.iteritems():
+    logging.debug("setup port %2d for cmd %s" % (port, cmd))
     GPIO.setup(port,  GPIO.OUT)
 
 
