@@ -1,6 +1,6 @@
 """
 http server for controlling rpi GPIOs
-
+gschaden@gmail.com, 2015
 """
 
 import SocketServer
@@ -58,26 +58,16 @@ class ServerRequestHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
         logging.debug("cmd %s" % fn)
         if CMD_PORT_MAP.has_key(fn):
             port = CMD_PORT_MAP[fn]
-            GPIO.output(port,  ~GPIO.input(port) & 0x1 ) # toggle
+            GPIO.output(port, ~GPIO.input(port) & 0x1 ) # toggle
 
     # webserver handler routine
     def do_GET(self):
         if self.path.startswith("/cmd"):
             cmd = self.path[4:]
-            if cmd == "/up":
-                self.cmd_direction("up")
-            elif cmd == "/down":
-                self.cmd_direction("down")
-            elif cmd == "/left":
-                self.cmd_direction("left")
-            elif cmd == "/right":
-                self.cmd_direction("right")
-            elif cmd == "/fn1":
-                self.cmd_fn("fn1")
-            elif cmd == "/fn2":
-                self.cmd_fn("fn2")
-            elif cmd == "/fn3":
-                self.cmd_fn("fn3")
+            if cmd in ("/up", "/down", "/left", "/right"):
+                self.cmd_direction(cmd[1:])
+            elif cmd in ("/fn1", "/fn2", "/fn3"):
+                self.cmd_fn(cmd[1:])
             # respond with current status
             json.dump(status(), self.wfile)
         else:
@@ -91,8 +81,6 @@ class ServerRequestHandler(SimpleHTTPServer.SimpleHTTPRequestHandler):
                 self.copyfile(urllib.urlopen("www" + self.path), self.wfile)
             else:
                 self.send_response(404)
-
-
 
 httpd = SocketServer.ThreadingTCPServer(('', PORT), ServerRequestHandler)
 logging.info("starting on port %d" % PORT)
